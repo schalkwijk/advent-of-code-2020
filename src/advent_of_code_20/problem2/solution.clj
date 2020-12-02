@@ -16,8 +16,10 @@
 
 (defn- valid-occurrence-password? [raw-password]
   (let [password (split-raw-password raw-password)
-        first-match (= (:char password)(nth (:password password) (dec (:lower password))))
-        second-match (= (:char password)(nth (:password password) (dec (:upper password))))]
+        char (:char password)
+        chunked-password (:password password)
+        first-match (= char (nth chunked-password (dec (:lower password))))
+        second-match (= char (nth chunked-password (dec (:upper password))))]
     (and (or first-match second-match) (not (= first-match second-match)))))
 
 (defn part1 [passwords]
