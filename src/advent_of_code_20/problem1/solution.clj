@@ -1,4 +1,4 @@
-(ns advent-of-code-20.problem1.solution1
+(ns advent-of-code-20.problem1.solution
   (:require [clojure.math.combinatorics :refer :all]))
 
 (defn- sum-to-target? [target numbers]

@@ -1,6 +1,6 @@
-(ns advent-of-code-20.problem1.solution1-test
+(ns advent-of-code-20.problem1.solution-test
   (:require [clojure.test :refer :all]
-            [advent-of-code-20.problem1.solution1 :refer :all]))
+            [advent-of-code-20.problem1.solution :refer :all]))
 
 (deftest part1-test
   (testing "sample input"

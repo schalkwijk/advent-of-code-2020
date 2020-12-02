@@ -1,6 +1,7 @@
 (ns advent-of-code-20.core
   (:gen-class)
-  (:require [advent-of-code-20.problem1.solution1 :as sol1]
+  (:require [advent-of-code-20.problem1.solution :as sol1]
+            [advent-of-code-20.problem2.solution :as sol2]
             [clojure.string :as str]))
 
 (defn to-int [string]
@@ -13,5 +14,8 @@
     (println (format "Running problem %s, part %s with input file %s" problem part input-file))
     (println (case problem
                "1" (if (= part "1")
-                   (sol1/part1 (map to-int (str/split (slurp input-file) #"\s")))
-                   (sol1/part2 (map to-int (str/split (slurp input-file) #"\s"))))))))
+                     (sol1/part1 (map to-int (str/split (slurp input-file) #"\s")))
+                     (sol1/part2 (map to-int (str/split (slurp input-file) #"\s"))))
+               "2" (if (= part "1")
+                     (sol2/part1 (str/split (slurp input-file) #"\n"))
+                     (sol2/part2 (str/split (slurp input-file) #"\n")))))))
