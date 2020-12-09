@@ -7,6 +7,7 @@
             [advent-of-code-20.problem5.solution :as sol5]
             [advent-of-code-20.problem6.solution :as sol6]
             [advent-of-code-20.problem7.solution :as sol7]
+            [advent-of-code-20.problem8.solution :as sol8]
             [clojure.string :as str]))
 
 (defn to-int [string]
@@ -38,4 +39,7 @@
                      (sol6/part2 (str/split (slurp input-file) #"\n\n")))
                "7" (if (= part "1")
                      (sol7/part1 (str/split (slurp input-file) #"\n"))
-                     (sol7/part2 (str/split (slurp input-file) #"\n")))))))
+                     (sol7/part2 (str/split (slurp input-file) #"\n")))
+               "8" (if (= part "1")
+                     (sol8/part1 (str/split (slurp input-file) #"\n"))
+                     (sol8/part2 (str/split (slurp input-file) #"\n")))))))
