@@ -9,3 +9,10 @@
       (is (= 20 (part1 input 2)))
       (is (= 51 (part1 input 3)))
       (is (= 37 (part1 input 10))))))
+
+(deftest part2-test
+  (testing "occupied seat count"
+    (let [input (str/split (slurp "test/advent_of_code_20/problem11/input.txt") #"\n")]
+      (is (= 7 (part2 input 2)))
+      (is (= 53 (part2 input 3)))
+      (is (= 26 (part2 input 10))))))
