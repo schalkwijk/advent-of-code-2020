@@ -1,53 +1,25 @@
 (ns advent-of-code-20.core
   (:gen-class)
-  (:require [advent-of-code-20.problem1.solution :as sol1]
-            [advent-of-code-20.problem2.solution :as sol2]
-            [advent-of-code-20.problem3.solution :as sol3]
-            [advent-of-code-20.problem4.solution :as sol4]
-            [advent-of-code-20.problem5.solution :as sol5]
-            [advent-of-code-20.problem6.solution :as sol6]
-            [advent-of-code-20.problem7.solution :as sol7]
-            [advent-of-code-20.problem8.solution :as sol8]
-            [advent-of-code-20.problem9.solution :as sol9]
-            [advent-of-code-20.problem10.solution :as sol10]
-            [clojure.string :as str]))
+  (:require [clojure.string :as str]))
 
 (defn to-int [string]
   (Integer/parseInt string))
 
+(defn- solve [problem part input-file process-input]
+  (let [ns-symbol (symbol (format "advent-of-code-20.problem%s.solution" problem))]
+    (require ns-symbol)
+    (let [target-function (ns-resolve (find-ns ns-symbol) (symbol (format "part%s" part)))]
+      (target-function (process-input (slurp input-file))))))
+
 (defn -main [& args]
   (let [problem (first args)
         part (second args)
-        input-file (last args)]
+        input-file (format "inputs/problem%s-part%s.txt" problem part)
+        process-input (case problem
+                        "1" #(str/split % #"\s")
+                        "3" (fn [input] (map #(str/split % #"") (str/split input #"\n")))
+                        "4" (fn [input] (map #(str/replace % "\n" " ") (str/split input #"\n\n")))
+                        "6" #(str/split % #"\n\n")
+                        #(str/split % #"\n"))]
     (println (format "Running problem %s, part %s with input file %s" problem part input-file))
-    (println (case problem
-               "1" (if (= part "1")
-                     (sol1/part1 (map to-int (str/split (slurp input-file) #"\s")))
-                     (sol1/part2 (map to-int (str/split (slurp input-file) #"\s"))))
-               "2" (if (= part "1")
-                     (sol2/part1 (str/split (slurp input-file) #"\n"))
-                     (sol2/part2 (str/split (slurp input-file) #"\n")))
-               "3" (if (= part "1")
-                     (sol3/part1 (map #(str/split % #"") (str/split (slurp input-file) #"\n")))
-                     (sol3/part2 (map #(str/split % #"") (str/split (slurp input-file) #"\n"))))
-               "4" (if (= part "1")
-                     (sol4/part1 (map #(str/replace % "\n" " ") (str/split (slurp input-file) #"\n\n")))
-                     (sol4/part2 (map #(str/replace % "\n" " ") (str/split (slurp input-file) #"\n\n"))))
-               "5" (if (= part "1")
-                     (sol5/part1 (str/split (slurp input-file) #"\n"))
-                     (sol5/part2 (str/split (slurp input-file) #"\n")))
-               "6" (if (= part "1")
-                     (sol6/part1 (str/split (slurp input-file) #"\n\n"))
-                     (sol6/part2 (str/split (slurp input-file) #"\n\n")))
-               "7" (if (= part "1")
-                     (sol7/part1 (str/split (slurp input-file) #"\n"))
-                     (sol7/part2 (str/split (slurp input-file) #"\n")))
-               "8" (if (= part "1")
-                     (sol8/part1 (str/split (slurp input-file) #"\n"))
-                     (sol8/part1 (str/split (slurp input-file) #"\n")))
-               "9" (if (= part "1")
-                     (sol9/part1 (str/split (slurp input-file) #"\n"))
-                     (sol9/part2 (str/split (slurp input-file) #"\n")))
-               "10" (if (= part "1")
-                     (sol10/part1 (str/split (slurp input-file) #"\n"))
-                     (sol10/part2 (str/split (slurp input-file) #"\n")))))))
+    (println (solve problem part input-file process-input))))

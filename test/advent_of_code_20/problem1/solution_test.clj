@@ -4,10 +4,10 @@
 
 (deftest part1-test
   (testing "sample input"
-    (let [input [1721 979 366 299 675 1456]]
+    (let [input ["1721" "979" "366" "299" "675" "1456"]]
       (is (= 514579 (part1 input))))))
 
 (deftest part2-test
   (testing "sample input"
-    (let [input [1721 979 366 299 675 1456]]
+    (let [input ["1721" "979" "366" "299" "675" "1456"]]
       (is (= 241861950 (part2 input))))))
