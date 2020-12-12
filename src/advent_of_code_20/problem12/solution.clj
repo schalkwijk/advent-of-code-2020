@@ -34,4 +34,20 @@
   (let [initial-state {:movement-vector 0 :coordinates [0 0]}]
     (compute-distance (reduce move-ship initial-state (map parse-line lines)))))
 
-(defn part2 [input] 10)
+(defn rotate-ship-2 [coordinate angles direction]
+  (->> (/ angles 90)
+       (range 0)
+       (reduce (fn [[x y] _] (if (= "R" direction) [y (* -1 x)] [(* -1 y) x])) coordinate)))
+
+(defn- move-ship-2 [{:keys [movement-vector] :as state} {:keys [instruction count]}]
+  (case instruction
+    "F" (update state :coordinates add-coordinate movement-vector count)
+    "N" (update state :movement-vector add-coordinate [0 1] count)
+    "S" (update state :movement-vector add-coordinate [0 -1] count)
+    "E" (update state :movement-vector add-coordinate [1 0] count)
+    "W" (update state :movement-vector add-coordinate [-1 0] count)
+    ("R" "L") (update state :movement-vector rotate-ship-2 count instruction)))
+
+(defn part2 [lines]
+  (let [initial-state {:movement-vector [10 1] :coordinates [0 0]}]
+    (compute-distance (reduce move-ship-2 initial-state (map parse-line lines)))))

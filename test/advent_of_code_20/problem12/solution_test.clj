@@ -15,3 +15,16 @@
       (is (= 20 (part1 input))))
     (let [input ["F10" "N3" "F7" "R90" "F11"]]
       (is (= 25 (part1 input))))))
+
+(deftest part2-test
+  (testing "sample input"
+    (let [input ["F10"]]
+      (is (= 110 (part2 input))))
+    (let [input ["F10" "N3"]]
+      (is (= 110 (part2 input))))
+    (let [input ["F10" "N3" "F7"]]
+      (is (= 208 (part2 input))))
+    (let [input ["F10" "N3" "F7" "R90"]]
+      (is (= 208 (part2 input))))
+    (let [input ["F10" "N3" "F7" "R90" "F11"]]
+      (is (= 286 (part2 input))))))
