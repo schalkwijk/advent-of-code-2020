@@ -1,4 +1,4 @@
-(ns advent-of-code-20.problem1.solution-test
+(ns advent-of-code-20.problemN.solution-test
   (:require [clojure.test :refer :all]
             [clojure.string :as str]
             [advent-of-code-20.problemN.solution :refer :all]))
