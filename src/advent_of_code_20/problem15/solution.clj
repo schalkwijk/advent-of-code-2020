@@ -4,13 +4,24 @@
 (defn- to-int [string]
   (Integer/parseInt string))
 
-(defn compute-next-number [numbers]
-  (let [target-number (last numbers)
-        index (inc (.lastIndexOf (subvec numbers 0 (dec (count numbers))) target-number))]
-    (if (= index 0) (conj numbers 0) (conj numbers (- (count numbers) index)))))
+(defn- create-ledger [numbers]
+  (into {} (map vector numbers (range))))
 
-(defn part1 [input]
-  (let [starting-numbers (vec (map to-int (str/split (first input) #",")))]
-    (last (nth (reductions (fn [state _] (compute-next-number state)) starting-numbers (range)) (- 2020 (count starting-numbers))))))
+(defn compute-next-number [{:keys [target-number ledger cnt] :as state}]
+  (let [index (get ledger target-number)
+        new-ledger (assoc ledger target-number cnt)
+        new-number (if (= index nil) 0 (- cnt index))]
+    (update (assoc (assoc state :target-number new-number) :ledger new-ledger) :cnt inc)))
 
-(defn part2 [input] 10)
+(defn part1
+  ([input] (part1 input 2020))
+  ([input c](let [starting-numbers (vec (map to-int (str/split (first input) #",")))
+                  state {:target-number 0 :ledger (create-ledger starting-numbers) :cnt (count starting-numbers)}]
+              (->> starting-numbers
+                   count
+                   inc
+                   (- c)
+                   (nth (reductions (fn [state index] (compute-next-number state)) state (range)))
+                   :target-number))))
+
+(defn part2 [input] (part1 input 30000000))
