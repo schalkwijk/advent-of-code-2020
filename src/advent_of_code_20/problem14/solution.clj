@@ -32,7 +32,37 @@
 (defn- process-instruction [state {:keys [op] :as instruction}]
   (if (= op :mem) (assign-value state instruction) (assign-mask state instruction)))
 
+(defn- apply-single-mask-2 [[bit mask]]
+  (case mask
+    \X mask
+    \0 bit
+    \1 mask))
+
+(defn- parse-long [number] (Long/parseLong number 2))
+
+(defn- mask-address [index address]
+  (map #(apply str (assoc (str/split address #"") index %)) ["0" "1"]))
+
+(defn- generate-addresses [masked-address]
+  (let [index (.indexOf masked-address "X")]
+    (if (= index -1)
+      [masked-address]
+      (mapcat generate-addresses (mask-address index masked-address)))))
+
+(defn- fetch-addresses [address mask]
+  (let [bit-address (Integer/toString address 2)
+        total-bits (count bit-address)
+        final-bit-address (format (str "%0" (- (count mask) total-bits) "d%s") 0 bit-address)]
+    (map parse-long (generate-addresses (apply str (map apply-single-mask-2 (map vector final-bit-address mask)))))))
+
+(defn- assign-value-2 [{:keys [mask] :as state} {:keys [address value] :as instruction}]
+  (reduce #(assoc-in %1 [:memory %2] value) state (fetch-addresses address mask)))
+
+(defn- process-instruction-2 [state {:keys [op] :as instruction}]
+  (if (= op :mem) (assign-value-2 state instruction) (assign-mask state instruction)))
+
 (defn part1 [input]
   (apply + (vals (:memory (reduce process-instruction {:memory {} :mask nil} (map parse-line input))))))
 
-(defn part2 [input] 10)
+(defn part2 [input]
+  (apply + (vals (:memory (reduce process-instruction-2 {:memory {} :mask nil} (map parse-line input))))))

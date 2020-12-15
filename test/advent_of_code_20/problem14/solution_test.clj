@@ -11,3 +11,8 @@
   (testing "processing instructions"
     (let [input (str/split (slurp "test/advent_of_code_20/problem14/input.txt") #"\n")]
       (is (= 165 (part1 input))))))
+
+(deftest part2-test
+  (testing "processing instructions"
+    (let [input (str/split (slurp "test/advent_of_code_20/problem14/input2.txt") #"\n")]
+      (is (= 208 (part2 input))))))
