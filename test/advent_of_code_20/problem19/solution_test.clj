@@ -7,3 +7,8 @@
   (testing "sample input"
     (let [input (str/split (slurp "test/advent_of_code_20/problem19/input.txt") #"\n\n")]
       (is (= 2 (part1 input))))))
+
+(deftest part2-test
+  (testing "sample input"
+    (let [input (str/split (slurp "test/advent_of_code_20/problem19/input2.txt") #"\n\n")]
+      (is (= 12 (part2 input))))))
