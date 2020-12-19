@@ -17,7 +17,7 @@
   (map #(str/split % #"") (str/split raw-sequences #"\n")))
 
 (defn- is-valid-recur [rule-id {:keys [index sequence valid required-characters] :as state}]
-  (if (or (> required-characters (inc (inc (inc (count sequence))))) (not valid) (>= index (count sequence)))
+  (if (or (>= required-characters (count sequence)) (not valid))
     [(assoc state :valid false)]
     (let [rule (get-in state [:rules rule-id])
          maybe-leaf (first (first rule))]
@@ -25,10 +25,10 @@
        [(-> state
             (assoc :valid (and valid (= maybe-leaf (nth sequence index))))
             (update :index inc))]
-       (mapcat (fn [subrule] (reduce-kv (fn [states index rule-id] (mapcat (fn [s] (is-valid-recur rule-id (update s :required-characters + index))) states)) [state] (vec subrule))) rule)))))
+       (mapcat (fn [subrule] (reduce-kv (fn [states index rule-id] (mapcat (fn [s] (is-valid-recur rule-id (update s :required-characters + (if (zero? index) 0 1)))) states)) [state] (vec subrule))) rule)))))
 
 (defn is-valid [rules sequence]
-  (let [state {:valid true :sequence sequence :rules rules :index 0 :required-characters 1}
+  (let [state {:valid true :sequence sequence :rules rules :index 0 :required-characters 0}
         final-states (is-valid-recur 0 state)]
     (some #(and (:valid %) (= (count sequence) (:index %))) final-states)))
 
