@@ -16,21 +16,21 @@
 (defn parse-sequences [raw-sequences]
   (map #(str/split % #"") (str/split raw-sequences #"\n")))
 
-(defn- is-valid-recur [rule-id {:keys [index sequence valid] :as state}]
-  (if (not valid)
-    [state]
+(defn- is-valid-recur [rule-id {:keys [index sequence valid required-characters] :as state}]
+  (if (or (> required-characters (count sequence)) (not valid))
+    [(assoc state :valid false)]
     (let [rule (get-in state [:rules rule-id])
          maybe-leaf (first (first rule))]
      (if (not (number? maybe-leaf))
        [(-> state
             (assoc :valid (and valid (= maybe-leaf (nth sequence index))))
             (update :index inc))]
-       (mapcat #(reduce (fn [states rule-id] (mapcat (fn [s] (is-valid-recur rule-id s)) states)) [state] %) rule)))))
+       (mapcat (fn [subrule] (reduce (fn [states rule-id] (mapcat (fn [s] (is-valid-recur rule-id s)) states)) [state] subrule)) rule)))))
 
 (defn is-valid [rules sequence]
-  (let [state {:valid true :sequence sequence :rules rules :index 0}
+  (let [state {:valid true :sequence sequence :rules rules :index 0 :required-characters 1}
         final-states (is-valid-recur 0 state)]
-    (identity (some #(and (:valid %) (= (count sequence) (:index %))) final-states))))
+    (some #(and (:valid %) (= (count sequence) (:index %))) final-states)))
 
 (defn part1 [input]
   (let [rules (parse-rules (first input))
