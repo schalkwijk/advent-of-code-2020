@@ -22,7 +22,7 @@
         bottom-row (last raw-rows)
         left-row (map first raw-rows)
         rows [top-row right-row bottom-row left-row]]
-    {:id (str tile-id "-" index) :raw-id tile-id :rows rows :raw-rows rows}))
+    {:id (str tile-id "-" index) :raw-id tile-id :rows rows :raw-rows raw-rows}))
 
 (defn- rotate [coll] (let [mtx (reverse coll)] (apply mapv #(into [] %&) mtx)))
 
@@ -68,4 +68,11 @@
          (map to-int)
          (apply *))))
 
-(defn part2 [input] 10)
+(defn part2 [input]
+  (let [tiles (mapcat create-tiles input)
+        matching-tiles (matching-tiles tiles)
+        row-count (int (Math/sqrt (count input)))
+        tile-indices (mapcat (fn [index] (map #(vector index %) (range 0 row-count))) (range 0 row-count))
+        empty-state {:available-tiles (set tiles) :board {} :matching-tiles matching-tiles}
+        states (reduce (fn [states index] (mapcat #(generate-next-states % index) states)) [empty-state] tile-indices)]
+    (map :raw-rows (first (map #(map (partial get-in %) tile-indices) (map :board states))))))
