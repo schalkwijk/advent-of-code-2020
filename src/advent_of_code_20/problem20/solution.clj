@@ -12,27 +12,25 @@
 (def left 3)
 
 (defn- flip [rows]
-  (let [[top-row right-row bottom-row left-row] rows]
-    [rows
-     [bottom-row (reverse right-row) top-row (reverse left-row)]
-     [(reverse top-row) left-row (reverse bottom-row) right-row]]))
+  [rows
+   (reverse rows)
+   (map reverse rows)])
 
-(defn- create-tile [tile-id index rows]
-  {:id (str tile-id "-" index) :raw-id tile-id :rows rows})
+(defn- create-tile [tile-id index raw-rows]
+  (let [top-row (first raw-rows)
+        right-row (map last raw-rows)
+        bottom-row (last raw-rows)
+        left-row (map first raw-rows)
+        rows [top-row right-row bottom-row left-row]]
+    {:id (str tile-id "-" index) :raw-id tile-id :rows rows :raw-rows rows}))
 
-(defn- rotate [[top-row right-row bottom-row left-row]]
-  [(reverse left-row) top-row (reverse right-row) bottom-row])
+(defn- rotate [coll] (let [mtx (reverse coll)] (apply mapv #(into [] %&) mtx)))
 
 (defn create-tiles [raw-tile]
   (let [raw-tile (str/split raw-tile #"\n")
         tile-id (second (re-matches #"Tile ([0-9]+):" (first raw-tile)))
-        rows (map #(str/split % #"") (rest raw-tile))
-        top-row (first rows)
-        right-row (map last rows)
-        bottom-row (last rows)
-        left-row (map first rows)
-        original [top-row right-row bottom-row left-row]]
-    (map-indexed (fn [index rows] (create-tile tile-id index rows)) (set (mapcat flip [original (rotate original) (rotate (rotate original)) (rotate (rotate (rotate original)))])))))
+        raw-rows (map #(str/split % #"") (rest raw-tile))]
+    (map-indexed (fn [index rows] (create-tile tile-id index rows)) (set (mapcat flip [raw-rows (rotate raw-rows) (rotate (rotate raw-rows)) (rotate (rotate (rotate raw-rows)))])))))
 
 (defn- update-matching-tiles [state [tile-a tile-b]]
   (let [bottom-match (= (get (:rows tile-a) bottom) (get (:rows tile-b) top))
@@ -70,4 +68,4 @@
          (map to-int)
          (apply *))))
 
-(defn part2 [input]) 10
+(defn part2 [input] 10)
