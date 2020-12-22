@@ -23,6 +23,7 @@
                         "16" #(str/split % #"\n\n")
                         "19" #(str/split % #"\n\n")
                         "20" #(str/split % #"\n\n")
+                        "22" #(str/split % #"\n\n")
                         #(str/split % #"\n"))]
     (println (format "Running problem %s, part %s with input file %s" problem part input-file))
     (println (solve problem part input-file process-input))))
