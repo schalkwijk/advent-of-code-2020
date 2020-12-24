@@ -6,4 +6,9 @@
 (deftest part1-test
   (testing "sample input"
     (let [input (str/split (slurp "test/advent_of_code_20/problem24/input.txt") #"\n")]
-      (is (= 0 (part1 input))))))
+      (is (= 9 (dec (part1 input)))))))
+
+(deftest part1-test
+  (testing "sample input"
+    (let [input (str/split (slurp "test/advent_of_code_20/problem24/input.txt") #"\n")]
+      (is (= 2207 (dec (part2 input)))))))
